@@ -21,5 +21,5 @@ row_count =len(percent)
 position = int((5*row_count)100)
 index_value = percent.iloc[position])
 print("The Position is {}".format(index_value))
-Pnl = df. *index_value
+Pnl = df. *index_value                          #pending
 Print("The Historical Pnl
