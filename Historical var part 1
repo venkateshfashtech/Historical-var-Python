@@ -3,7 +3,6 @@ import pandas as pd, os, pandas_datareader.data as web,datetime as dt  # sentdex
 os.chdir("C:\Users\XBBL36T\Downloads\New folder\BBH")
 
 start = dt.datetime(2000,1,1)
-
 end = dt.datetime(2018,10,31)
 
 
@@ -15,15 +14,12 @@ print(df.tail())				#to show the headers along with bottom six rows while runnin
 df.to_csv('Historical var calc -Tesla.csv')
 df = pd.read_csv('Historical var calc -Tesla.csv',parse_dates=True, index_col='Date')
 AvgPrice =df.loc[start,end,'Avg price']
-
-
 Percent= pd.DataFrame({'Return':AvgPrice.pct_change()*100})				#https://www.youtube.com/watch?v=9OxJU5APE5c
-
 percent.sort_values(by=['Return'],ascending=True,na_position='first')
-
 percent.dropna()
-
 row_count =len(percent)
-
 position = int((5*row_count)100)
-	
+index_value = percent.iloc[position])
+print("The Position is {}".format(index_value))
+Pnl = df. *index_value
+Print("The Historical Pnl
