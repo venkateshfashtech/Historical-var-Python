@@ -1,0 +1,29 @@
+import pandas as pd, os, pandas_datareader.data as web,datetime as dt  # sentdex youtube
+
+os.chdir("C:\Users\XBBL36T\Downloads\New folder\BBH")
+
+start = dt.datetime(2000,1,1)
+
+end = dt.datetime(2018,10,31)
+
+
+df = web.DataReader('TSLA','yahoo',start,end)	#to download price timeseries from web Tsla- ticker,yahoo-source
+print(df.head())				#to show the headers along with first few rows while running,adj close after stock split etc
+print(df.head(6))				#to show the headers along with first six rows while running
+print(df.tail())				#to show the headers along with bottom six rows while running
+
+df.to_csv('Historical var calc -Tesla.csv')
+df = pd.read_csv('Historical var calc -Tesla.csv',parse_dates=True, index_col='Date')
+AvgPrice =df.loc[start,end,'Avg price']
+
+
+Percent= pd.DataFrame({'Return':AvgPrice.pct_change()*100})				#https://www.youtube.com/watch?v=9OxJU5APE5c
+
+percent.sort_values(by=['Return'],ascending=True,na_position='first')
+
+percent.dropna()
+
+row_count =len(percent)
+
+position = int((5*row_count)100)
+	
