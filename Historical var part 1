@@ -1,4 +1,4 @@
-import pandas as pd, os, pandas_datareader.data as web,datetime as dt   # sentdex youtube
+import pandas as pd, os, pandas_datareader.data as web,datetime as dt  # sentdex youtube
 
 os.chdir("C:\Users\XBBL36T\Downloads\New folder\BBH")
 
@@ -11,15 +11,24 @@ print(df.head())				#to show the headers along with first few rows while running
 print(df.head(6))				#to show the headers along with first six rows while running
 print(df.tail())				#to show the headers along with bottom six rows while running
 
-df.to_csv('Historical var calc -Tesla.csv')
-df = pd.read_csv('Historical var calc -Tesla.csv',parse_dates=True, index_col='Date')
-AvgPrice =df.loc[start,end,'Avg price']
-Percent= pd.DataFrame({'Return':AvgPrice.pct_change()*100})				#https://www.youtube.com/watch?v=9OxJU5APE5c
+df.to_csv('PriceTimeSeries -Tesla.csv')
+df = pd.read_csv('PriceTimeSeries-Tesla.csv',parse_dates=True, index_col='Date')
+
+percent = df[['Adj Close']].pct_change()*100
 percent.sort_values(by=['Return'],ascending=True,na_position='first')
 percent.dropna()
 row_count =len(percent)
-position = int((5*row_count)100)
-index_value = percent.iloc[position])
-print("The Position is {}".format(index_value))
-Pnl = df. *index_value                          #pending
-Print("The Historical Pnl
+position = int((5*row_count)*100)
+Pnl =df.loc['end'] * percent.iloc[[position+1]]
+Print("Historical PnL :{}.format(pnl))
+
+
+writer = pd.ExcelWriter('Historical Var-Tesla.xlsx',engine='xlsxwriter')
+df.to_excel(writer, sheet_name='Sheet1')
+percent.to_excel(writer, sheet_name='Sheet1', startcol=6, startrow=1)
+pnl_text = "PnL for Tesla"
+Pnl_text.to_excel(writer, sheet_name='Sheet1', startcol=8, startrow=4)
+Pnl.to_excel(writer, sheet_name='Sheet1', startcol=8, startrow=5)
+writer.save()
+
+
