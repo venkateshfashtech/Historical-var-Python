@@ -11,16 +11,19 @@ df1 = df.pct_change()*100
 percent_change = list(df1['Adj Close'])
 percent = pd.DataFrame(percent_change, columns=['percent_change'])
 percent.dropna()
-percent.sort_values(by=['percent_change'], ascending=True, na_position='first')
+sorted_percent = percent.sort_values(by=['percent_change'], ascending=True, na_position='first')
 row_count = len(percent)
 position = int(5*row_count/100)
-Pnl = float(df.loc['2018-10-31']['Adj Close']) * percent.iloc[[position+1]]
+print(position)
+print(df.loc['2018-10-31']['Adj Close'])
+print(sorted_percent.iloc[[position+1]])
+Pnl = float(df.loc['2018-10-31']['Adj Close']) * sorted_percent.iloc[[position+1]]
 print("Historical PnL :{}".format(Pnl))
 
 writer = pd.ExcelWriter('Historical Var-Tesla.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='Sheet1')
 percent.to_excel(writer, sheet_name='Sheet1', startcol=18, startrow=1)
-pnl_text = "PnL for Tesla"
+pnl_text = "Historical VaR PnL for Tesla"
 writer.sheets['Sheet1'].write(4,28,pnl_text)
 Pnl.to_excel(writer, sheet_name='Sheet1', startcol=28, startrow=5)
 writer.save()
