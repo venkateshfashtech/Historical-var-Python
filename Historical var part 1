@@ -1,34 +1,26 @@
-import pandas as pd, os, pandas_datareader.data as web,datetime as dt  # sentdex youtube
+import pandas as pd, os, pandas_datareader.data as web,datetime as dt,time  # sentdex youtube
 
-os.chdir("C:\Users\XBBL36T\Downloads\New folder\BBH")
-
-start = dt.datetime(2000,1,1)
-end = dt.datetime(2018,10,31)
-
-
-df = web.DataReader('TSLA','yahoo',start,end)	#to download price timeseries from web Tsla- ticker,yahoo-source
-print(df.head())				#to show the headers along with first few rows while running,adj close after stock split etc
-print(df.head(6))				#to show the headers along with first six rows while running
-print(df.tail())				#to show the headers along with bottom six rows while running
-
+os.chdir("F:\Python\Historical Var")
+start = dt.datetime(2000, 1, 1)
+end = dt.datetime(2018, 10, 31)
+df = web.DataReader('TSLA', 'yahoo', start, end)	#to download price timeseries from web Tsla- ticker,yahoo-source
 df.to_csv('PriceTimeSeries -Tesla.csv')
-df = pd.read_csv('PriceTimeSeries-Tesla.csv',parse_dates=True, index_col='Date')
 
-percent = df[['Adj Close']].pct_change()*100
-percent.sort_values(by=['Return'],ascending=True,na_position='first')
+df = pd.read_csv('PriceTimeSeries -Tesla.csv', parse_dates=True, index_col='Date')
+df1 = df.pct_change()*100
+percent_change = list(df1['Adj Close'])
+percent = pd.DataFrame(percent_change, columns=['percent_change'])
 percent.dropna()
-row_count =len(percent)
-position = int((5*row_count)*100)
-Pnl =df.loc['end'] * percent.iloc[[position+1]]
-Print("Historical PnL :{}.format(pnl))
+percent.sort_values(by=['percent_change'], ascending=True, na_position='first')
+row_count = len(percent)
+position = int(5*row_count/100)
+Pnl = float(df.loc['2018-10-31']['Adj Close']) * percent.iloc[[position+1]]
+print("Historical PnL :{}".format(Pnl))
 
-
-writer = pd.ExcelWriter('Historical Var-Tesla.xlsx',engine='xlsxwriter')
+writer = pd.ExcelWriter('Historical Var-Tesla.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='Sheet1')
-percent.to_excel(writer, sheet_name='Sheet1', startcol=6, startrow=1)
+percent.to_excel(writer, sheet_name='Sheet1', startcol=18, startrow=1)
 pnl_text = "PnL for Tesla"
-Pnl_text.to_excel(writer, sheet_name='Sheet1', startcol=8, startrow=4)
-Pnl.to_excel(writer, sheet_name='Sheet1', startcol=8, startrow=5)
+writer.sheets['Sheet1'].write(4,28,pnl_text)
+Pnl.to_excel(writer, sheet_name='Sheet1', startcol=28, startrow=5)
 writer.save()
-
-
