@@ -3,22 +3,20 @@ import pandas as pd, os, pandas_datareader.data as web,datetime as dt  # sentdex
 os.chdir("F:\Python\Historical Var")
 start = dt.datetime(2000, 1, 1)
 end = dt.datetime(2018, 10, 31)
-df = web.DataReader('TSLA', 'yahoo', start, end)	#to download price timeseries from web Tsla- ticker,yahoo-source
-df.to_csv('PriceTimeSeries -Tesla.csv')  #to have a copy of untouched timeseries
+df = web.DataReader('TSLA', 'yahoo', start, end)	 #to download price timeseries from web Tsla- ticker,yahoo-source
+df.to_csv('PriceTimeSeries -Tesla.csv') 		 #to have a copy of untouched timeseries
 
 df = pd.read_csv('PriceTimeSeries -Tesla.csv', parse_dates=True, index_col='Date')
-df1 = df.pct_change()*100
-percent_change = list(df1['Adj Close'])
-percent = pd.DataFrame(percent_change, columns=['percent_change'])
-percent.dropna()
-sorted_percent = percent.sort_values(by=['percent_change'], ascending=True, na_position='first')
-row_count = len(percent)
+df['percent'] = df['Adj Close'].pct_change()*100
+dropped_na = df.dropna()
+sorted_df = dropped_na.sort_values(by=['percent'], ascending=True, na_position='first')
+row_count = len(df['percent']
 position = int(5*row_count/100)
-print(position)                                 #to cross check calculation
-print(df.loc['2018-10-31']['Adj Close'])        #to cross check calculation
-print(sorted_percent.iloc[[position+1]])        #to cross check calculation
+print(position)                                		 #to cross check calculation
+print(df.loc['2018-10-31']['Adj Close'])      		 #to cross check calculation
+print(sorted_percent.iloc[[position+1]])     		 #to cross check calculation
 Pnl = float(df.loc['2018-10-31']['Adj Close']) * sorted_percent.iloc[[position+1]]
-print("Historical PnL :{}".format(Pnl))         #to cross check calculation
+print("Historical PnL :{}".format(Pnl))        		 #to cross check calculation
 
 writer = pd.ExcelWriter('Historical Var-Tesla.xlsx', engine='xlsxwriter')
 df.to_excel(writer, sheet_name='Sheet1')
